@@ -8,22 +8,23 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: setup dotnet
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      - name: publish mono-compatible exe
-        run: dotnet publish MoonsecDeobfuscator.csproj /p:UseAppHost=false /p:SelfContained=false
+      - name: restore solution
+        run: dotnet restore *.sln
 
-      - name: find exe
-        run: find . -name "MoonsecDeobfuscator*.exe"
+      - name: publish project (mono-compatible)
+        run: dotnet publish *.csproj /p:UseAppHost=false /p:SelfContained=false
+
+      - name: show exe location
+        run: find . -name "*.exe"
 
       - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: moonsecdeobfuscator
-          path: '**/publish/MoonsecDeobfuscator*.exe'
+          path: '**/publish/*.exe'
