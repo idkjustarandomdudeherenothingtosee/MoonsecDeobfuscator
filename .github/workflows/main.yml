@@ -17,13 +17,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: publish mono-compatible exe
-        run: |
-          dotnet publish MoonsecDeobfuscator.sln \
-            -c Release \
-            -r win-x64 \
-            /p:UseAppHost=false \
-            /p:SelfContained=false \
-            /p:Platform=x64
+        run: dotnet publish MoonsecDeobfuscator.sln -c Release -r win-x64 /p:UseAppHost=false /p:SelfContained=false /p:Platform=x64
 
       - name: find exe
         run: |
