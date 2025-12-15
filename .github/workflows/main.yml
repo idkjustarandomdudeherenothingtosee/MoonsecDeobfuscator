@@ -14,11 +14,14 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: restore solution
-        run: dotnet restore *.sln
+      - name: find csproj
+        id: findproj
+        run: |
+          proj=$(ls *.csproj | head -n 1)
+          echo "PROJECT=$proj" >> $GITHUB_OUTPUT
 
       - name: publish project (mono-compatible)
-        run: dotnet publish *.csproj /p:UseAppHost=false /p:SelfContained=false
+        run: dotnet publish ${{ steps.findproj.outputs.PROJECT }} /p:UseAppHost=false /p:SelfContained=false
 
       - name: show exe location
         run: find . -name "*.exe"
