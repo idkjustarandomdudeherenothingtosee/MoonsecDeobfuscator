@@ -10,11 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: setup dotnet
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
@@ -26,9 +24,15 @@ jobs:
 
       - name: run deobfuscator
         run: |
+          tmp="$GITHUB_WORKSPACE/output.tmp"
           dotnet run -c Release -- \
-            input.lua \
-            output.lua
+            "$GITHUB_WORKSPACE/input.lua" \
+            "$GITHUB_WORKSPACE/output.lua" > "$tmp"
+          test -s "$tmp" && mv "$tmp" "$GITHUB_WORKSPACE/output.lua"
+
+      - name: verify output
+        run: |
+          test -s "$GITHUB_WORKSPACE/output.lua"
 
       - name: upload output
         uses: actions/upload-artifact@v4
