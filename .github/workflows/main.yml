@@ -16,10 +16,11 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: build
-        run: dotnet build MoonsecDeobfuscatorAPI.csproj -c Release
+        run: dotnet build MoonsecDeobfuscator.sln -c Release
 
       - name: upload
         uses: actions/upload-artifact@v4
         with:
           name: moonsecdeobfuscator
-          path: bin/Release
+          path: |
+            **/bin/Release/**
